@@ -13,6 +13,7 @@ module.exports = function (RED) {
       eventInterval: parseInt(config.eventInterval),
       payload: config.payload === undefined ? 'getInfo' : config.payload,
       payloadType: config.payloadType === undefined ? 'info' : config.payloadType,
+      throwErrors: config.throw,
       debug: config.debug
     }
 
@@ -66,6 +67,7 @@ module.exports = function (RED) {
       } catch (err) {
         shellDevice.connecting = false
         if (node.config.debug) node.error(`Error connecting to device ${id}: ${err}`)
+        if (node.config.throwErrors) throw Error(`Error connecting to device ${id}: ${err}`);
         // Unable to connect initially. If device is later seen during discovery,
         // it will use the discovery response to 'connect' and everything will
         // then work normally.
